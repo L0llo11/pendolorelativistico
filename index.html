@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pendulum Animation</title>
+  <title>Pendolo Relativistico</title>
   <style>
     body {
       margin: 0;
@@ -18,7 +18,7 @@
     }
 
     canvas {
-      background-color: #001f3f;
+      background-color: #011f3e;
     }
 
     #timer {
@@ -29,8 +29,9 @@
 </head>
 <body>
   <canvas id="pendulumCanvas" width="600" height="400"></canvas>
-  <div id="timer">Elapsed Time: 0.0s</div>
-
-  <script src="script.js"></script>
+  <div id="timer">Tempo passato: 0.0s</div>
+  <label for="speedSlider">Velocità del razzo: <span id="speedValue">0.00</span> c </label>
+  <input type="range" id="speedSlider" min="0" max="0.99" step="0.001" value="0" />
+  <script src="pendolo.js"></script>
 </body>
 </html>
