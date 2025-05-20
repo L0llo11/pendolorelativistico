@@ -35,8 +35,29 @@ function drawRocketOutline() {
   const rocketWidth = 400;
   const rocketHeight = 360;
 
-  // Corpo centrale del razzo
+  // Corpo centrale
   ctx.strokeRect(rocketX, rocketY, rocketWidth, rocketHeight);
+
+  // Punta anteriore
+  ctx.beginPath();
+  ctx.moveTo(rocketX + rocketWidth, rocketY);
+  ctx.lineTo(rocketX + rocketWidth + 40, rocketY + rocketHeight / 2);
+  ctx.lineTo(rocketX + rocketWidth, rocketY + rocketHeight);
+  ctx.stroke();
+
+  // Pinna superiore
+  ctx.beginPath();
+  ctx.moveTo(rocketX, rocketY);
+  ctx.lineTo(rocketX - 30, rocketY - 30);
+  ctx.lineTo(rocketX, rocketY + 20);
+  ctx.stroke();
+
+  // Pinna inferiore
+  ctx.beginPath();
+  ctx.moveTo(rocketX, rocketY + rocketHeight);
+  ctx.lineTo(rocketX - 30, rocketY + rocketHeight + 30);
+  ctx.lineTo(rocketX, rocketY + rocketHeight - 20);
+  ctx.stroke();
 }
 
 function drawTitle() {
@@ -50,7 +71,7 @@ function drawPendulum(elapsed) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawRocketOutline();
-  drawTitle()
+  drawTitle();
 
   const frequency = 1 / relativisticPeriod;
   const angularFrequency = 2 * Math.PI * frequency;
@@ -87,4 +108,3 @@ function animate(timestamp) {
 }
 
 requestAnimationFrame(animate);
-
