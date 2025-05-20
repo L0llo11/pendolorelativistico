@@ -1,11 +1,11 @@
 const canvas = document.getElementById('pendulumCanvas');
 const ctx = canvas.getContext('2d');
 const centerX = canvas.width / 2;
-const topY = 50;
-const length = 200;
-const radius = 20;
+const topY = 108;
+const length = 152;
+const radius = 11;
 
-const properPeriod = 18; // T = 18s (periodo nel sistema proprio)
+const properPeriod = 8.1; // T = 18s (periodo nel sistema proprio)
 let relativisticPeriod = properPeriod;
 
 const slider = document.getElementById('speedSlider');
@@ -28,15 +28,36 @@ let startTime = null;
 
 function drawRocketOutline() {
   ctx.strokeStyle = 'white';
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 3.6;
 
-  const rocketX = centerX - 200;
-  const rocketY = topY - 40;
-  const rocketWidth = 400;
-  const rocketHeight = 360;
+  const rocketX = centerX - 180;
+  const rocketY = topY - 1.8;
+  const rocketWidth = 360;
+  const rocketHeight = 198;
 
-  // Corpo centrale del razzo
+  // Corpo centrale
   ctx.strokeRect(rocketX, rocketY, rocketWidth, rocketHeight);
+
+  // Punta anteriore
+  ctx.beginPath();
+  ctx.moveTo(rocketX + rocketWidth, rocketY);
+  ctx.lineTo(rocketX + rocketWidth + 90, rocketY + rocketHeight / 2);
+  ctx.lineTo(rocketX + rocketWidth, rocketY + rocketHeight);
+  ctx.stroke();
+
+  // Pinna superiore
+  ctx.beginPath();
+  ctx.moveTo(rocketX, rocketY);
+  ctx.lineTo(rocketX - 36, rocketY - 18);
+  ctx.lineTo(rocketX, rocketY + 36);
+  ctx.stroke();
+
+  // Pinna inferiore
+  ctx.beginPath();
+  ctx.moveTo(rocketX, rocketY + rocketHeight);
+  ctx.lineTo(rocketX - 36, rocketY + rocketHeight + 18);
+  ctx.lineTo(rocketX, rocketY + rocketHeight - 36);
+  ctx.stroke();
 }
 
 function drawTitle() {
@@ -50,7 +71,7 @@ function drawPendulum(elapsed) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawRocketOutline();
-  drawTitle()
+  drawTitle();
 
   const frequency = 1 / relativisticPeriod;
   const angularFrequency = 2 * Math.PI * frequency;
@@ -81,10 +102,9 @@ function animate(timestamp) {
   drawPendulum(elapsed);
 
   document.getElementById('timer').textContent =
-  `Elapsed Time: ${elapsed.toFixed(1)}s`;
+    `Tempo Passato: ${elapsed.toFixed(1)}s`;
 
   requestAnimationFrame(animate);
 }
 
 requestAnimationFrame(animate);
-  
