@@ -1,110 +1,45 @@
-const canvas = document.getElementById('pendulumCanvas');
-const ctx = canvas.getContext('2d');
-const centerX = canvas.width / 2;
-const topY = 50;
-const length = 200;
-const radius = 20;
+const canvas = document.getElementById('pendulumCanvas'); const ctx = canvas.getContext('2d'); const centerX = canvas.width / 2; const topY = 50; const length = 200; const radius = 20;
 
-const properPeriod = 18; // T = 18s (periodo nel sistema proprio)
-let relativisticPeriod = properPeriod;
+const properPeriod = 18; // T = 18s (periodo nel sistema proprio) let relativisticPeriod = properPeriod;
 
-const slider = document.getElementById('speedSlider');
-const speedDisplay = document.getElementById('speedValue');
+const slider = document.getElementById('speedSlider'); const speedDisplay = document.getElementById('speedValue');
 
-// Funzione per calcolare la dilatazione temporale
-function updatePeriod() {
-  const v = parseFloat(slider.value); // velocità attuale (in unità di c)
-  speedDisplay.textContent = v.toFixed(2);
+// Funzione per calcolare la dilatazione temporale function updatePeriod() { const v = parseFloat(slider.value); // velocità attuale (in unità di c) speedDisplay.textContent = v.toFixed(2);
 
-  // T' = T / sqrt(1 - v^2/c^2)
-  const gamma = 1 / Math.sqrt(1 - v * v);
-  relativisticPeriod = properPeriod * gamma;
-}
+// T' = T / sqrt(1 - v^2/c^2) const gamma = 1 / Math.sqrt(1 - v * v); relativisticPeriod = properPeriod * gamma; }
 
-slider.addEventListener('input', updatePeriod);
-updatePeriod(); // inizializza
+slider.addEventListener('input', updatePeriod); updatePeriod(); // inizializza
 
 let startTime = null;
 
-function drawRocketOutline() {
-  ctx.strokeStyle = 'white';
-  ctx.lineWidth = 5;
+function drawRocketOutline() { ctx.strokeStyle = 'white'; ctx.lineWidth = 5;
 
-  const rocketX = centerX - 200;
-  const rocketY = topY - 40;
-  const rocketWidth = 400;
-  const rocketHeight = 360;
+const rocketX = centerX - 200; const rocketY = topY - 40; const rocketWidth = 400; const rocketHeight = 360;
 
-  // Corpo centrale
-  ctx.strokeRect(rocketX, rocketY, rocketWidth, rocketHeight);
+// Corpo centrale del razzo ctx.strokeRect(rocketX, rocketY, rocketWidth, rocketHeight); }
 
-  // Punta anteriore
-  ctx.beginPath();
-  ctx.moveTo(rocketX + rocketWidth, rocketY);
-  ctx.lineTo(rocketX + rocketWidth + 40, rocketY + rocketHeight / 2);
-  ctx.lineTo(rocketX + rocketWidth, rocketY + rocketHeight);
-  ctx.stroke();
+function drawTitle() { ctx.font = '30px sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = 'white'; ctx.fillText('Pendolo Relativistico', centerX, 40); }
 
-  // Pinna superiore
-  ctx.beginPath();
-  ctx.moveTo(rocketX, rocketY);
-  ctx.lineTo(rocketX - 30, rocketY - 30);
-  ctx.lineTo(rocketX, rocketY + 20);
-  ctx.stroke();
+function drawPendulum(elapsed) { ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Pinna inferiore
-  ctx.beginPath();
-  ctx.moveTo(rocketX, rocketY + rocketHeight);
-  ctx.lineTo(rocketX - 30, rocketY + rocketHeight + 30);
-  ctx.lineTo(rocketX, rocketY + rocketHeight - 20);
-  ctx.stroke();
-}
+drawRocketOutline(); drawTitle()
 
-function drawTitle() {
-  ctx.font = '30px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'white';
-  ctx.fillText('Pendolo Relativistico', centerX, 40);
-}
+const frequency = 1 / relativisticPeriod; const angularFrequency = 2 * Math.PI * frequency; const maxAngle = Math.PI / 4;
 
-function drawPendulum(elapsed) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+const theta = maxAngle * -Math.cos(angularFrequency * elapsed);
 
-  drawRocketOutline();
-  drawTitle();
+const ballX = centerX + length * Math.sin(theta); const ballY = topY + length * Math.cos(theta);
 
-  const frequency = 1 / relativisticPeriod;
-  const angularFrequency = 2 * Math.PI * frequency;
-  const maxAngle = Math.PI / 4;
+ctx.beginPath(); ctx.moveTo(centerX, topY); ctx.lineTo(ballX, ballY); ctx.strokeStyle = 'white'; ctx.lineWidth = 2; ctx.stroke();
 
-  const theta = maxAngle * -Math.cos(angularFrequency * elapsed);
+ctx.beginPath(); ctx.arc(ballX, ballY, radius, 0, 2 * Math.PI); ctx.fillStyle = 'white'; ctx.fill(); }
 
-  const ballX = centerX + length * Math.sin(theta);
-  const ballY = topY + length * Math.cos(theta);
+function animate(timestamp) { if (!startTime) startTime = timestamp; const elapsed = (timestamp - startTime) / 1000;
 
-  ctx.beginPath();
-  ctx.moveTo(centerX, topY);
-  ctx.lineTo(ballX, ballY);
-  ctx.strokeStyle = 'white';
-  ctx.lineWidth = 2;
-  ctx.stroke();
+drawPendulum(elapsed);
 
-  ctx.beginPath();
-  ctx.arc(ballX, ballY, radius, 0, 2 * Math.PI);
-  ctx.fillStyle = 'white';
-  ctx.fill();
-}
+document.getElementById('timer').textContent = Tempo Passato: ${elapsed.toFixed(1)}s;
 
-function animate(timestamp) {
-  if (!startTime) startTime = timestamp;
-  const elapsed = (timestamp - startTime) / 1000;
-
-  drawPendulum(elapsed);
-
-  document.getElementById('timer').textContent =
-    `Tempo Passato: ${elapsed.toFixed(1)}s`;
-
-  requestAnimationFrame(animate);
-}
+requestAnimationFrame(animate); }
 
 requestAnimationFrame(animate);
